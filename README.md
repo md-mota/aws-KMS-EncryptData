@@ -19,3 +19,25 @@ To make the workflow clear and practical, the project includes:
 Overall, this project demonstrates how AWS KMS, DynamoDB, and IAM work together to secure data, enforce least‑privilege access, and protect encrypted resources at the key level.
 
 ---
+
+## Workflow Diagrams
+
+**Part 1:** Creating the encryption key and adding admins and users.  
+<img src="workflow-diagram1.png" width="500">
+
+**Part 2:** Creating the DynamoDB and encrypting it with KMS.  
+<img src="workflow-diagram2.png" width="500">
+
+**Part 3:** Creating test user and giving full access to only DynamoDB.  
+<img src="workflow-diagram3.png" width="500">
+
+**Part 4:** Failing to view the table as the test user.  
+<img src="workflow-diagram4.png" width="500">
+
+**Part 5:** Modifying the key's policy and granting the test user to decrypt the data.  
+<img src="workflow-diagram5.png" width="500">
+
+**Part 6:** Final Diagram for project overview.  
+<img src="workflow-diagram6.png" width="500">
+
+---
