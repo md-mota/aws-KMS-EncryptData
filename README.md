@@ -3,8 +3,14 @@ Secure Data Encryption • IAM Access Control • Key Policy Management
 
 ---
 
-## Project Description  
-This project walks through how to **encrypt a DynamoDB table using a customer‑managed AWS KMS key** and verify that encryption is enforced through IAM permissions. Instead of simply enabling encryption, the project focuses on **how AWS handles decryption access**, how unauthorized users are blocked, and how key policies determine who can read encrypted data.
+## Project Description
+This project demonstrates how to **encrypt a DynamoDB table using a customer‑managed AWS KMS key** and verify that decryption access is properly enforced through IAM permissions and KMS key policies.
+
+Instead of simply enabling encryption, the project focuses on:
+
+- **How AWS KMS handles decryption access**
+- **How unauthorized users are blocked**
+- **How key policies determine who can read encrypted data**
 
 To make the workflow clear and practical, the project includes:
 
@@ -20,24 +26,70 @@ Overall, this project demonstrates how AWS KMS, DynamoDB, and IAM work together 
 
 ---
 
+## Technologies Used
+- **AWS KMS** — Customer‑managed keys for encryption and decryption  
+- **AWS DynamoDB** — Encrypted NoSQL database  
+- **AWS IAM** — Users, roles, and permission boundaries  
+- **AWS Console & AWS CLI** — Resource creation and testing  
+- **JSON Key Policies** — Fine‑grained access control  
+- **Git & GitHub** — Version control and documentation  
+
+---
+
+## Architecture Overview
+This project uses a **customer‑managed KMS key** to encrypt a DynamoDB table. IAM permissions alone are not enough to decrypt data—AWS KMS must explicitly allow the user to perform decryption.
+
+### Key Components
+- **KMS CMK** — Performs encryption and decryption  
+- **DynamoDB Table** — Encrypted at rest using the CMK  
+- **Admin User** — Full permissions to manage KMS and DynamoDB  
+- **Test User** — DynamoDB access only (no KMS permissions)  
+- **KMS Key Policy** — Controls who can decrypt the data  
+
+### High‑Level Flow
+1. Admin creates a CMK in KMS
+2. Admin creates a DynamoDB table encrypted with the CMK  
+3. Admin inserts data  
+4. Test user attempts to read data → **fails**  
+5. Admin updates the key policy  
+6. Test user attempts again → **succeeds**  
+
+---
+
 ## Workflow Diagrams
 
 **Part 1:** Creating the encryption key and adding admins and users.  
 <img src="workflow-diagram1.png" width="500">
 
-**Part 2:** Creating the DynamoDB and encrypting it with KMS.  
+**Part 2:** Creating the DynamoDB table and encrypting it with KMS.  
 <img src="workflow-diagram2.png" width="500">
 
-**Part 3:** Creating test user and giving full access to only DynamoDB.  
+**Part 3:** Creating the test user and giving full access only to DynamoDB.  
 <img src="workflow-diagram3.png" width="500">
 
 **Part 4:** Failing to view the table as the test user.  
 <img src="workflow-diagram4.png" width="500">
 
-**Part 5:** Modifying the key's policy and granting the test user to decrypt the data.  
+**Part 5:** Modifying the key policy and granting the test user decrypt permissions.  
 <img src="workflow-diagram5.png" width="500">
 
-**Part 6:** Final Diagram for project overview.  
+**Part 6:** Final diagram showing the complete project workflow.  
 <img src="workflow-diagram6.png" width="500">
 
 ---
+
+## Example KMS Key Policy Snippet
+This policy grants the test user permission to decrypt data encrypted with the CMK.
+
+```json
+{
+  "Effect": "Allow",
+  "Principal": {
+    "AWS": "arn:aws:iam::<ACCOUNT-ID>:user/TestUser"
+  },
+  "Action": [
+    "kms:Decrypt",
+    "kms:DescribeKey"
+  ],
+  "Resource": "*"
+}
