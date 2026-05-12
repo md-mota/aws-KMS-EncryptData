@@ -37,7 +37,7 @@ Overall, this project demonstrates how AWS KMS, DynamoDB, and IAM work together 
 ---
 
 ## Architecture Overview
-This project uses a **customer‑managed KMS key** to encrypt a DynamoDB table. IAM permissions alone are not enough to decrypt data—AWS KMS must explicitly allow the user to perform decryption.
+This project uses a **customer‑managed KMS key** to encrypt a DynamoDB table. IAM permissions alone are not enough to decrypt data, AWS KMS must explicitly allow the user to perform decryption.
 
 ### Key Components
 - **KMS CMK** — Performs encryption and decryption  
